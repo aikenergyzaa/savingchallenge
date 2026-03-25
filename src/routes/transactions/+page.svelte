@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { supabase } from "$lib/supabaseClient";
+    import { getSupabaseErrorMessage } from "$lib/supabaseError";
     import { format } from "date-fns";
     import { ChevronRight, Gem } from "lucide-svelte";
     import { currentUser } from "$lib/userStore";
@@ -8,6 +9,7 @@
 
     let transactions: any[] = [];
     let loading = true;
+    let loadError = "";
     let selectedMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
 
     $: if ($currentUser) {
@@ -16,6 +18,7 @@
 
     async function loadTransactions() {
         loading = true;
+        loadError = "";
         const [year, month] = selectedMonth.split("-");
         const startOfMonth = new Date(
             parseInt(year),
@@ -33,6 +36,7 @@
         const { owner } = await resolveOwner(supabase, $currentUser);
         if (!owner) {
             transactions = [];
+            loadError = "ยังไม่พบผู้ใช้ที่ใช้งานอยู่";
             loading = false;
             return;
         }
@@ -45,8 +49,13 @@
             .eq("owner", owner)
             .order("date", { ascending: false });
 
-        if (error) console.error(error);
-        else transactions = data || [];
+        if (error) {
+            console.error(error);
+            transactions = [];
+            loadError = getSupabaseErrorMessage("โหลดรายการไม่สำเร็จ", error);
+        } else {
+            transactions = data || [];
+        }
 
         loading = false;
     }
@@ -67,6 +76,12 @@
 
     {#if loading}
         <div class="text-center py-10 text-slate-400">กำลังโหลด...</div>
+    {:else if loadError}
+        <div
+            class="text-center py-10 bg-white rounded-xl border border-rose-100"
+        >
+            <p class="text-rose-600 whitespace-pre-line">{loadError}</p>
+        </div>
     {:else if transactions.length === 0}
         <div
             class="text-center py-10 bg-white rounded-xl border border-slate-100"

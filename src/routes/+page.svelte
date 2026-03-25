@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { supabase } from "$lib/supabaseClient";
+    import { getSupabaseErrorMessage } from "$lib/supabaseError";
     import { Wallet, TrendingUp, TrendingDown } from "lucide-svelte";
     import { currentUser, users } from "$lib/userStore";
     import { resolveOwner } from "$lib/owner";
@@ -150,7 +151,10 @@
             .lte("date", endOfMonth)
             .eq("owner", owner);
 
-        if (txError) console.error("Error loading transactions:", txError);
+        if (txError) {
+            console.error("Error loading transactions:", txError);
+            expenseSummary = getSupabaseErrorMessage("โหลดข้อมูลไม่สำเร็จ", txError);
+        }
 
         if (transactions) {
             const expenses = transactions.filter((t) => t.type === "expense");

@@ -12,6 +12,7 @@
     import { runSlipOcr, type SlipOcrResult } from "$lib/slipOcr";
     import { resolveOwner } from "$lib/owner";
     import { getReceiptPreviewUrl } from "$lib/receiptUrl";
+    import { getSupabaseErrorMessage } from "$lib/supabaseError";
     import { prepareReceiptUpload } from "$lib/utils/receiptUpload";
     import {
         getCategoriesByType,
@@ -317,24 +318,27 @@
         let uploadedImagePath: string | null = null;
 
         if (file) {
-            const prepared = await prepareReceiptUpload(file);
-            const fileName = `${Date.now()}_${Math.random().toString(36).slice(2, 10)}.${prepared.ext}`;
-            const filePath = `${ownerForWrite}/${fileName}`;
+            try {
+                const prepared = await prepareReceiptUpload(file);
+                const fileName = `${Date.now()}_${Math.random().toString(36).slice(2, 10)}.${prepared.ext}`;
+                const filePath = `${ownerForWrite}/${fileName}`;
 
-            const { error: uploadError } = await supabase.storage
-                .from("receipts")
-                .upload(filePath, prepared.body, {
-                    contentType: prepared.contentType,
-                });
+                const { error: uploadError } = await supabase.storage
+                    .from("receipts")
+                    .upload(filePath, prepared.body, {
+                        contentType: prepared.contentType,
+                    });
 
-            if (uploadError) {
-                console.error("Upload error:", uploadError);
-                alert(`Failed to upload image: ${uploadError.message}`);
+                if (uploadError) throw uploadError;
+
+                image_path = filePath;
+                uploadedImagePath = filePath;
+            } catch (error) {
+                console.error("Upload error:", error);
+                alert(getSupabaseErrorMessage("อัปโหลดรูปภาพไม่สำเร็จ", error));
                 loading = false;
                 return;
             }
-            image_path = filePath;
-            uploadedImagePath = filePath;
         }
 
         const basePayload = {
@@ -364,15 +368,7 @@
         if (error) {
             await cleanupReceiptUpload(uploadedImagePath);
             console.error("Error saving transaction:", error);
-            const message =
-                typeof error === "object" && error && "message" in error
-                    ? String((error as { message?: unknown }).message || "")
-                    : "";
-            alert(
-                message
-                    ? `Failed to save transaction: ${message}`
-                    : "Failed to save transaction",
-            );
+            alert(getSupabaseErrorMessage("บันทึกรายการไม่สำเร็จ", error));
         } else {
             if (ocrMetadataDropped) {
                 alert(OCR_METADATA_WARNING_MESSAGE);
@@ -422,7 +418,7 @@
 
         if (error) {
             console.error("Error saving no spend day:", error);
-            alert("Failed to save no spend day");
+            alert(getSupabaseErrorMessage("บันทึกรายการวันไม่ใช้เงินไม่สำเร็จ", error));
         } else {
             goto("/");
         }

@@ -6,6 +6,7 @@
     import { resolveOwner } from "$lib/owner";
     import { resolveJarForExpenseCategory, type JarKey } from "$lib/jars";
     import { runSlipOcr, type SlipOcrResult } from "$lib/slipOcr";
+    import { getSupabaseErrorMessage } from "$lib/supabaseError";
     import { prepareReceiptUpload } from "$lib/utils/receiptUpload";
     import {
         getCategoriesByType,
@@ -479,18 +480,24 @@
     }
 
     async function uploadReceipt(owner: string, file: File): Promise<string> {
-        const prepared = await prepareReceiptUpload(file);
-        const fileName = `${Date.now()}_${Math.random().toString(36).slice(2, 10)}.${prepared.ext}`;
-        const filePath = `${owner}/${fileName}`;
+        try {
+            const prepared = await prepareReceiptUpload(file);
+            const fileName = `${Date.now()}_${Math.random().toString(36).slice(2, 10)}.${prepared.ext}`;
+            const filePath = `${owner}/${fileName}`;
 
-        const { error } = await supabase.storage
-            .from("receipts")
-            .upload(filePath, prepared.body, {
-                contentType: prepared.contentType,
-            });
+            const { error } = await supabase.storage
+                .from("receipts")
+                .upload(filePath, prepared.body, {
+                    contentType: prepared.contentType,
+                });
 
-        if (error) throw new Error(error.message || "upload failed");
-        return filePath;
+            if (error) throw error;
+            return filePath;
+        } catch (error) {
+            throw new Error(
+                getSupabaseErrorMessage("อัปโหลดรูปภาพไม่สำเร็จ", error),
+            );
+        }
     }
 
     async function cleanupReceiptUpload(filePath: string | null): Promise<void> {
