@@ -109,9 +109,9 @@
         z-index: 1;
         display: grid;
         min-height: 100%;
-        align-content: center;
-        gap: 1.5rem;
-        width: min(100%, 76rem);
+        align-content: space-between;
+        gap: 1rem;
+        width: 100%;
         margin: 0 auto;
         padding:
             max(2rem, env(safe-area-inset-top))
@@ -125,6 +125,11 @@
         max-width: 40rem;
         justify-items: center;
         text-align: center;
+        align-self: start;
+        justify-self: center;
+        position: relative;
+        z-index: 2;
+        padding-top: clamp(0.2rem, 2vh, 1rem);
     }
 
     .bmw-intro__eyebrow,
@@ -162,39 +167,40 @@
         font-size: clamp(2.8rem, 7vw, 5.8rem);
         line-height: 0.96;
         letter-spacing: -0.04em;
-        text-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+        text-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
     }
 
     .bmw-intro__visual {
-        position: relative;
-        margin-top: 0.35rem;
-        padding: 0.8rem 0 0.2rem;
+        position: absolute;
+        inset: 0;
+        margin: 0;
+        padding: 0;
+        z-index: 0;
     }
 
     .bmw-intro__visual::before {
         content: "";
         position: absolute;
-        inset: auto 50% 12%;
-        width: min(72vw, 34rem);
-        height: min(72vw, 34rem);
+        inset: auto 50% 8%;
+        width: min(84vw, 44rem);
+        height: min(84vw, 44rem);
         transform: translateX(-50%);
         border-radius: 9999px;
-        background: radial-gradient(circle, rgba(216, 175, 82, 0.26), transparent 64%);
-        filter: blur(52px);
+        background: radial-gradient(circle, rgba(216, 175, 82, 0.22), transparent 64%);
+        filter: blur(72px);
     }
 
     .bmw-intro__photo-frame {
-        position: relative;
-        width: min(100%, 28rem);
-        aspect-ratio: 5 / 6;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
         margin: 0 auto;
         overflow: hidden;
-        border-radius: 2rem;
-        border: 1px solid rgba(255, 241, 217, 0.14);
+        border-radius: 0;
+        border: 0;
         background: #0c0a08;
-        box-shadow:
-            0 36px 80px rgba(0, 0, 0, 0.42),
-            inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        box-shadow: none;
         animation: photoFloat 5.8s ease-in-out infinite;
     }
 
@@ -203,7 +209,7 @@
         position: absolute;
         inset: 0;
         border-radius: inherit;
-        border: 1px solid rgba(255, 241, 217, 0.1);
+        border: 0;
         pointer-events: none;
         z-index: 3;
     }
@@ -212,30 +218,30 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        object-position: center 58%;
-        transform: scale(1.03);
-        filter: saturate(0.9) contrast(1.02) brightness(0.74);
+        object-position: center 56%;
+        transform: scale(1.04);
+        filter: saturate(0.88) contrast(1.03) brightness(0.7);
     }
 
     .bmw-intro__photo-tint {
         position: absolute;
         inset: 0;
         background:
-            linear-gradient(180deg, rgba(5, 5, 5, 0.2) 0%, rgba(5, 5, 5, 0.06) 24%, rgba(5, 5, 5, 0.36) 68%, rgba(5, 5, 5, 0.72) 100%),
-            radial-gradient(circle at 50% 74%, rgba(255, 206, 124, 0.1), transparent 20%),
-            radial-gradient(circle at 50% 20%, rgba(255, 243, 219, 0.12), transparent 22%);
+            linear-gradient(180deg, rgba(6, 6, 6, 0.58) 0%, rgba(6, 6, 6, 0.18) 28%, rgba(6, 6, 6, 0.1) 50%, rgba(6, 6, 6, 0.42) 74%, rgba(6, 6, 6, 0.84) 100%),
+            radial-gradient(circle at 50% 72%, rgba(255, 206, 124, 0.1), transparent 16%),
+            radial-gradient(circle at 50% 18%, rgba(255, 243, 219, 0.08), transparent 18%);
         z-index: 1;
         pointer-events: none;
     }
 
     .bmw-intro__lamp {
         position: absolute;
-        top: 63%;
-        width: 3.2rem;
-        height: 3.2rem;
+        top: 61%;
+        width: clamp(2.4rem, 4vw, 3.6rem);
+        height: clamp(2.4rem, 4vw, 3.6rem);
         border-radius: 9999px;
         background: radial-gradient(circle, rgba(255, 220, 163, 0.88) 0%, rgba(255, 208, 119, 0.38) 38%, transparent 76%);
-        filter: blur(10px);
+        filter: blur(12px);
         mix-blend-mode: screen;
         opacity: 0;
         animation: lampGlow 1s ease-out 0.65s forwards;
@@ -244,17 +250,21 @@
     }
 
     .bmw-intro__lamp--left {
-        left: 31%;
+        left: calc(50% - min(10vw, 5rem));
     }
 
     .bmw-intro__lamp--right {
-        right: 31%;
+        right: calc(50% - min(10vw, 5rem));
     }
 
     .bmw-intro__roadline {
-        width: min(100%, 24rem);
+        position: absolute;
+        left: 50%;
+        bottom: max(1.4rem, env(safe-area-inset-bottom));
+        width: min(100%, 26rem);
         height: 0.35rem;
-        margin: 1rem auto 0;
+        margin: 0;
+        transform: translateX(-50%);
         border-radius: 9999px;
         background: linear-gradient(90deg, transparent 0%, rgba(243, 200, 118, 0.1) 14%, rgba(255, 224, 160, 0.65) 50%, rgba(243, 200, 118, 0.1) 86%, transparent 100%);
         box-shadow: 0 0 22px rgba(243, 200, 118, 0.22);
@@ -297,20 +307,28 @@
 
     @media (max-width: 640px) {
         .bmw-intro__content {
-            gap: 1rem;
             padding-top: max(1.5rem, env(safe-area-inset-top));
             padding-bottom: max(1.6rem, env(safe-area-inset-bottom));
         }
 
-        .bmw-intro__photo-frame {
-            width: min(100%, 21rem);
-            border-radius: 1.7rem;
+        .bmw-intro__title {
+            font-size: clamp(2.5rem, 12vw, 4.2rem);
         }
 
         .bmw-intro__lamp {
-            top: 62%;
-            width: 2.5rem;
-            height: 2.5rem;
+            top: 60%;
+        }
+
+        .bmw-intro__lamp--left {
+            left: calc(50% - 4.1rem);
+        }
+
+        .bmw-intro__lamp--right {
+            right: calc(50% - 4.1rem);
+        }
+
+        .bmw-intro__roadline {
+            width: min(72vw, 16rem);
         }
     }
 

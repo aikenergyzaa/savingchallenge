@@ -192,6 +192,15 @@
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   }
 
+  .bottom-nav-link.route-active {
+    color: #ffffff;
+  }
+
+  .bottom-nav-link.route-active span:last-child {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
   .bottom-nav-link.active .bottom-nav-icon-shell {
     background: rgba(255, 255, 255, 0.12);
     transform: translateY(-1px);
@@ -203,6 +212,10 @@
     transform: translateY(1px) scale(0.98);
   }
 
+  .bottom-nav-link.route-pressed {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+
   .bottom-nav-link[data-state="pressed"] .bottom-nav-icon-shell {
     background: rgba(255, 255, 255, 0.18);
     transform: scale(0.96);
@@ -212,6 +225,10 @@
     color: #fff4da;
     background: rgba(216, 175, 82, 0.18);
     box-shadow: inset 0 0 0 1px rgba(216, 175, 82, 0.18);
+  }
+
+  .bottom-nav-link.route-pending {
+    color: #fff4da;
   }
 
   .bottom-nav-link[data-state="pending"] .bottom-nav-icon-shell {

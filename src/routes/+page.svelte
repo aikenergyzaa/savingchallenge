@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import BmwE36Splash from "$lib/components/BmwE36Splash.svelte";
+    import { introOverlayState } from "$lib/introOverlay";
     import { supabase } from "$lib/supabaseClient";
     import { getSupabaseErrorMessage } from "$lib/supabaseError";
     import { Wallet, TrendingUp, TrendingDown } from "lucide-svelte";
@@ -124,6 +125,7 @@
         clearIntroTimers();
         showIntro = true;
         introLeaving = false;
+        introOverlayState.set("visible");
 
         const prefersReducedMotion = window.matchMedia(
             "(prefers-reduced-motion: reduce)",
@@ -138,6 +140,7 @@
             setTimeout(() => {
                 showIntro = false;
                 introLeaving = false;
+                introOverlayState.set("hidden");
                 clearIntroTimers();
             }, visibleDuration + leavingDuration),
         ];
@@ -245,6 +248,7 @@
 
         return () => {
             clearIntroTimers();
+            introOverlayState.set("hidden");
         };
     });
 </script>
