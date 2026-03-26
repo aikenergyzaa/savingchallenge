@@ -1,5 +1,6 @@
 <script lang="ts">
   import "../app.css";
+  import { afterNavigate } from "$app/navigation";
   import { Home, PlusCircle, List, PieChart, Trophy } from "lucide-svelte";
   import { currentUser, users } from "$lib/userStore";
   import { navigating, page } from "$app/stores";
@@ -56,6 +57,9 @@
     },
   ];
 
+  let pressedHref: string | null = null;
+  let pendingHref: string | null = null;
+
   function matchesPath(href: string, pathname: string) {
     if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(`${href}/`);
@@ -67,15 +71,33 @@
 
   function isVisualActive(href: string) {
     const pendingPath = $navigating?.to?.url.pathname;
-    return matchesPath(href, pendingPath || $page.url.pathname);
+    return matchesPath(href, pendingHref || pendingPath || $page.url.pathname);
   }
 
   function navState(href: string) {
     const pendingPath = $navigating?.to?.url.pathname;
-    if (pendingPath && matchesPath(href, pendingPath)) return "pending";
+    if (pressedHref === href) return "pressed";
+    if (matchesPath(href, pendingHref || pendingPath || "")) return "pending";
     if (isActive(href)) return "active";
     return "idle";
   }
+
+  function handleNavPointerDown(href: string) {
+    pressedHref = href;
+  }
+
+  function handleNavPointerUp() {
+    pressedHref = null;
+  }
+
+  function handleNavClick(href: string) {
+    pendingHref = href;
+  }
+
+  afterNavigate(() => {
+    pressedHref = null;
+    pendingHref = null;
+  });
 
   $: activeNavItem =
     navItems.find((item) => isVisualActive(item.href)) || navItems[0];
@@ -132,6 +154,11 @@
         aria-current={isActive(item.href) ? "page" : undefined}
         aria-label={item.label}
         data-sveltekit-preload-data="tap"
+        on:pointerdown={() => handleNavPointerDown(item.href)}
+        on:pointerup={handleNavPointerUp}
+        on:pointercancel={handleNavPointerUp}
+        on:pointerleave={handleNavPointerUp}
+        on:click={() => handleNavClick(item.href)}
       >
         <span class="bottom-nav-icon-shell" aria-hidden="true">
         <svelte:component this={item.icon} size={item.primary ? 24 : 20} />

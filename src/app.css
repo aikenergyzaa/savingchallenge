@@ -197,6 +197,17 @@
     transform: translateY(-1px);
   }
 
+  .bottom-nav-link[data-state="pressed"] {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.16);
+    transform: translateY(1px) scale(0.98);
+  }
+
+  .bottom-nav-link[data-state="pressed"] .bottom-nav-icon-shell {
+    background: rgba(255, 255, 255, 0.18);
+    transform: scale(0.96);
+  }
+
   .bottom-nav-link[data-state="pending"] {
     color: #fff4da;
     background: rgba(216, 175, 82, 0.18);
