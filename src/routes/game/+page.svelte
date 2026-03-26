@@ -111,30 +111,33 @@
 </script>
 
 <div class="space-y-8 pb-10">
-  <div class="text-center">
-    <Trophy class="w-16 h-16 text-yellow-500 mx-auto mb-2" />
-    <h2 class="text-2xl font-bold text-slate-800">Challenge Zone</h2>
-    <p class="text-slate-500">แข่งกันออม ใครจะแน่กว่ากัน!</p>
-  </div>
+  <section class="hero-panel p-6 md:p-8 text-center">
+    <div class="relative z-10">
+      <div class="eyebrow text-white/65">Challenge Zone</div>
+      <Trophy class="mx-auto mb-3 mt-3 h-16 w-16 text-[#f1d892]" />
+      <h2 class="text-4xl font-extrabold tracking-tight text-white">Savings Duel</h2>
+      <p class="mt-2 text-sm text-white/72">แข่งกันออม ใครจะแน่กว่ากัน!</p>
+    </div>
+  </section>
 
   {#if loading}
-    <div class="text-center py-10 text-slate-400">กำลังคำนวณสถิติ...</div>
+    <div class="section-card py-10 text-center text-[#6f665c]">กำลังคำนวณสถิติ...</div>
   {:else}
     <!-- 1. Logging Streak Battle -->
     <div
-      class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden"
+      class="glass-panel overflow-hidden"
     >
       <div
-        class="bg-slate-800 text-white p-3 text-center font-bold flex items-center justify-center gap-2"
+        class="bg-[#171411] p-4 text-center font-bold text-white flex items-center justify-center gap-2"
       >
         <Flame size={20} class="text-orange-400" />
         Logging Streak Battle
       </div>
-      <div class="grid grid-cols-2 divide-x divide-slate-100">
+      <div class="grid grid-cols-2 divide-x divide-[#00000010]">
         <!-- Bear -->
         <div
           class="p-6 flex flex-col items-center {streakWinner === 'bear'
-            ? 'bg-orange-50'
+            ? 'bg-[#fff5e8]'
             : ''}"
         >
           <div class="text-4xl mb-2">{users.bear.emoji}</div>
@@ -152,7 +155,7 @@
         <!-- Rabbit -->
         <div
           class="p-6 flex flex-col items-center {streakWinner === 'rabbit'
-            ? 'bg-pink-50'
+            ? 'bg-[#fff2f4]'
             : ''}"
         >
           <div class="text-4xl mb-2">{users.rabbit.emoji}</div>
@@ -172,22 +175,22 @@
 
     <!-- 2. Expense Battle (Low wins) -->
     <div
-      class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden"
+      class="glass-panel overflow-hidden"
     >
       <div
-        class="bg-slate-800 text-white p-3 text-center font-bold flex items-center justify-center gap-2"
+        class="bg-[#171411] p-4 text-center font-bold text-white flex items-center justify-center gap-2"
       >
         <TrendingDown size={20} class="text-red-400" />
         Expense Battle (เดือนนี้)
       </div>
-      <div class="p-2 text-center text-xs text-slate-400 bg-slate-50">
+      <div class="bg-[#f7f3ec] p-2 text-center text-xs text-[#6f665c]">
         ใครจ่ายน้อยกว่าชนะ!
       </div>
-      <div class="grid grid-cols-2 divide-x divide-slate-100">
+      <div class="grid grid-cols-2 divide-x divide-[#00000010]">
         <!-- Bear -->
         <div
           class="p-6 flex flex-col items-center {expenseWinner === 'bear'
-            ? 'bg-orange-50'
+            ? 'bg-[#fff5e8]'
             : ''}"
         >
           <div class="text-4xl mb-2">{users.bear.emoji}</div>
@@ -206,7 +209,7 @@
         <!-- Rabbit -->
         <div
           class="p-6 flex flex-col items-center {expenseWinner === 'rabbit'
-            ? 'bg-pink-50'
+            ? 'bg-[#fff2f4]'
             : ''}"
         >
           <div class="text-4xl mb-2">{users.rabbit.emoji}</div>
@@ -227,22 +230,22 @@
 
     <!-- 3. Savings Battle (High wins) -->
     <div
-      class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden"
+      class="glass-panel overflow-hidden"
     >
       <div
-        class="bg-slate-800 text-white p-3 text-center font-bold flex items-center justify-center gap-2"
+        class="bg-[#171411] p-4 text-center font-bold text-white flex items-center justify-center gap-2"
       >
         <PiggyBank size={20} class="text-emerald-400" />
         Savings Battle (เดือนนี้)
       </div>
-      <div class="p-2 text-center text-xs text-slate-400 bg-slate-50">
+      <div class="bg-[#f7f3ec] p-2 text-center text-xs text-[#6f665c]">
         ใครเหลือเงินเยอะกว่าชนะ!
       </div>
-      <div class="grid grid-cols-2 divide-x divide-slate-100">
+      <div class="grid grid-cols-2 divide-x divide-[#00000010]">
         <!-- Bear -->
         <div
           class="p-6 flex flex-col items-center {savingsWinner === 'bear'
-            ? 'bg-orange-50'
+            ? 'bg-[#fff5e8]'
             : ''}"
         >
           <div class="text-4xl mb-2">{users.bear.emoji}</div>
@@ -261,7 +264,7 @@
         <!-- Rabbit -->
         <div
           class="p-6 flex flex-col items-center {savingsWinner === 'rabbit'
-            ? 'bg-pink-50'
+            ? 'bg-[#fff2f4]'
             : ''}"
         >
           <div class="text-4xl mb-2">{users.rabbit.emoji}</div>

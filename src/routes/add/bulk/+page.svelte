@@ -789,20 +789,42 @@
     }
 </script>
 
-<div class="space-y-5 pb-24">
+<div class="space-y-6 pb-28">
+    <section class="hero-panel p-6 md:p-8">
+        <div class="relative z-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+                <div class="eyebrow text-white/65">Batch Intake</div>
+                <h2 class="mt-2 text-4xl font-extrabold tracking-tight text-white">บันทึกหลายสลิป</h2>
+                <p class="mt-2 text-sm text-white/72">อัปโหลด OCR หลายไฟล์, ตรวจผล และบันทึกทีเดียว</p>
+            </div>
+            <label
+                class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-white/15"
+            >
+                <Upload size={14} /> เพิ่มสลิป
+                <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    class="hidden"
+                    on:change={handleFileChange}
+                />
+            </label>
+        </div>
+    </section>
+
     <div class="flex items-center justify-between gap-3">
         <div class="flex items-center gap-2">
             <a
                 href="/add"
-                class="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800"
+                class="inline-flex items-center gap-1 text-sm text-[#6f665c] hover:text-[#171411]"
             >
                 <ArrowLeft size={16} /> กลับ
             </a>
-            <h2 class="text-xl font-bold text-slate-800">บันทึกหลายสลิป</h2>
+            <h2 class="text-xl font-bold text-[#171411]">บันทึกหลายสลิป</h2>
         </div>
 
         <label
-            class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50 cursor-pointer"
+            class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#00000010] bg-white/80 px-3 py-2 text-xs font-medium text-[#171411] hover:bg-white"
         >
             <Upload size={14} /> เพิ่มสลิป
             <input
@@ -816,26 +838,26 @@
     </div>
 
     {#if globalError}
-        <div class="rounded-lg border border-rose-100 bg-rose-50 p-3 text-sm text-rose-700">
+        <div class="rounded-[20px] border border-rose-100 bg-rose-50 p-3 text-sm text-rose-700">
             {globalError}
         </div>
     {/if}
 
     {#if batchSummary}
-        <div class="rounded-lg border border-emerald-100 bg-emerald-50 p-3 text-sm text-emerald-700">
+        <div class="rounded-[20px] border border-emerald-100 bg-emerald-50 p-3 text-sm text-emerald-700">
             {batchSummary}
         </div>
     {/if}
 
     {#if items.length === 0}
         <label
-            class="block rounded-xl border-2 border-dashed border-slate-200 bg-white p-8 text-center cursor-pointer hover:border-pink-400 transition-colors"
+            class="glass-panel block cursor-pointer border-2 border-dashed border-[#cdbfa8] p-10 text-center transition-colors hover:border-[#b4872f]"
         >
-            <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-pink-50 text-pink-600">
+            <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#f5efdf] text-[#8c6a22]">
                 <ImageIcon size={22} />
             </div>
-            <div class="font-semibold text-slate-700">เลือกหลายสลิปพร้อมกัน</div>
-            <p class="mt-1 text-xs text-slate-500">
+            <div class="font-semibold text-[#171411]">เลือกหลายสลิปพร้อมกัน</div>
+            <p class="mt-1 text-xs text-[#6f665c]">
                 รองรับสูงสุด {MAX_FILES} รูป, ไม่เกิน 8MB ต่อรูป
             </p>
             <input
@@ -852,7 +874,7 @@
                 type="button"
                 on:click={saveAllItems}
                 disabled={savingAll || scanningBatch || classifyingAll || unsavedCount === 0}
-                class="inline-flex items-center gap-1 rounded-lg bg-pink-500 px-3 py-2 text-xs font-bold text-white hover:bg-pink-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="lux-button-primary px-4 py-2 text-xs disabled:cursor-not-allowed disabled:opacity-50"
             >
                 {#if savingAll}
                     <Loader2 size={14} class="animate-spin" />
@@ -867,7 +889,7 @@
                 type="button"
                 on:click={classifyAll}
                 disabled={classifyingAll || savingAll}
-                class="inline-flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-medium text-blue-700 hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-medium text-blue-700 hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
             >
                 {#if classifyingAll}
                     <Loader2 size={14} class="animate-spin" />
@@ -882,7 +904,7 @@
                 type="button"
                 on:click={clearAllItems}
                 disabled={savingAll}
-                class="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+                class="lux-button-secondary px-3 py-2 text-xs disabled:opacity-50"
             >
                 <Trash2 size={14} />
                 ล้างทั้งหมด
@@ -890,7 +912,7 @@
 
             <a
                 href="/transactions"
-                class="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50"
+                class="lux-button-secondary px-3 py-2 text-xs"
             >
                 ดูรายการทั้งหมด
             </a>
@@ -898,12 +920,12 @@
 
         <div class="space-y-3">
             {#each items as item}
-                <div class="rounded-xl border border-slate-100 bg-white p-4 shadow-sm">
+                <div class="section-card p-4">
                     <div class="flex items-start justify-between gap-3">
                         <div class="flex items-start gap-3 min-w-0">
                             <button
                                 type="button"
-                                class="h-20 w-16 overflow-hidden rounded-lg border border-slate-100 bg-slate-50"
+                                class="h-20 w-16 overflow-hidden rounded-[18px] border border-[#00000010] bg-[#f7f3ec]"
                                 on:click={() => (selectedPreview = item.previewUrl)}
                             >
                                 <img
@@ -914,7 +936,7 @@
                             </button>
 
                             <div class="min-w-0">
-                                <div class="truncate text-sm font-semibold text-slate-800">
+                                <div class="truncate text-sm font-semibold text-[#171411]">
                                     {item.sourceFileName}
                                 </div>
                                 <div
@@ -934,7 +956,7 @@
 
                                 {#if item.status === "scanning"}
                                     <div class="mt-2 w-40">
-                                        <div class="h-1.5 rounded bg-slate-100 overflow-hidden">
+                                        <div class="h-1.5 overflow-hidden rounded bg-slate-100">
                                             <div
                                                 class="h-1.5 bg-blue-500 transition-all"
                                                 style="width: {Math.round(item.ocrProgress * 100)}%"
@@ -987,7 +1009,7 @@
                                 value={item.type}
                                 on:change={(event) =>
                                     onTypeChange(item.id, selectValue(event))}
-                                class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                                class="lux-input py-2 text-sm"
                             >
                                 <option value="expense">รายจ่าย</option>
                                 <option value="income">รายรับ</option>
@@ -1007,7 +1029,7 @@
                                         "amount",
                                         parseNumberInput(inputValue(event)),
                                     )}
-                                class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                                class="lux-input py-2 text-sm"
                                 placeholder="0.00"
                             />
                         </div>
@@ -1019,7 +1041,7 @@
                                 value={item.date}
                                 on:input={(event) =>
                                     setItemField(item.id, "date", inputValue(event))}
-                                class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                                class="lux-input py-2 text-sm"
                             />
                         </div>
 
@@ -1029,7 +1051,7 @@
                                 value={item.category}
                                 on:change={(event) =>
                                     setItemField(item.id, "category", selectValue(event))}
-                                class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                                class="lux-input py-2 text-sm"
                             >
                                 <option value="">เลือกหมวดหมู่</option>
                                 {#each getCategoriesByType(item.type) as cat}
@@ -1050,7 +1072,7 @@
                                             "customCategory",
                                             inputValue(event),
                                         )}
-                                    class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                                    class="lux-input py-2 text-sm"
                                     placeholder="เช่น กาแฟประชุม"
                                 />
                             </div>
@@ -1063,7 +1085,7 @@
                                 value={item.note}
                                 on:input={(event) =>
                                     setItemField(item.id, "note", textareaValue(event))}
-                                class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                                class="lux-input py-2 text-sm"
                                 placeholder="รายละเอียดเพิ่มเติม..."
                             ></textarea>
                         </div>
@@ -1134,13 +1156,13 @@
             {/each}
         </div>
 
-        <div class="fixed bottom-0 left-0 right-0 border-t border-slate-200 bg-white/95 backdrop-blur p-4">
+        <div class="fixed bottom-0 left-0 right-0 border-t border-[#00000010] bg-[#faf8f2]/95 p-4 backdrop-blur">
             <div class="mx-auto flex max-w-md gap-2">
                 <button
                     type="button"
                     on:click={saveAllItems}
                     disabled={savingAll || scanningBatch || classifyingAll || unsavedCount === 0}
-                    class="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-pink-500 px-4 py-3 text-sm font-bold text-white hover:bg-pink-600 disabled:opacity-50"
+                    class="lux-button-primary flex-1 disabled:opacity-50"
                 >
                     {#if savingAll}
                         <Loader2 size={16} class="animate-spin" />
@@ -1153,7 +1175,7 @@
                 <button
                     type="button"
                     on:click={() => goto("/add")}
-                    class="inline-flex items-center justify-center rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                    class="lux-button-secondary text-sm"
                 >
                     ย้อนกลับ
                 </button>

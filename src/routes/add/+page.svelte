@@ -591,49 +591,65 @@
     }
 </script>
 
-<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-bold text-slate-800">
+<div class="space-y-6">
+    <section class="hero-panel p-6 md:p-8">
+        <div class="relative z-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+                <div class="eyebrow text-white/65">Transaction Atelier</div>
+                <h2 class="mt-2 text-4xl font-extrabold tracking-tight text-white">
+                    {isEditMode ? "แก้ไขรายการ" : "บันทึกรายการใหม่"}
+                </h2>
+                <p class="mt-2 text-sm text-white/72">
+                    บันทึกรายรับ, รายจ่าย, OCR และ AI classification โดยใช้ workflow เดิม
+                </p>
+            </div>
+            {#if !isEditMode}
+                <div class="flex flex-wrap gap-2">
+                    <a
+                        href="/add/bulk"
+                        class="lux-button-secondary border-white/10 bg-white/10 text-white"
+                    >
+                        อัปหลายสลิป
+                    </a>
+                    <button
+                        type="button"
+                        on:click={handleNoSpend}
+                        class="lux-button bg-[#d8af52] px-5 py-3 font-bold text-[#171411]"
+                    >
+                        วันนี้ไม่ได้ใช้เงินเลย
+                    </button>
+                </div>
+            {/if}
+        </div>
+    </section>
+
+<div class="glass-panel p-6 md:p-8">
+    <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-2xl font-bold text-[#171411]">
             {isEditMode ? "แก้ไขรายการ" : "บันทึกรายการใหม่"}
         </h2>
-        {#if !isEditMode}
-            <div class="flex items-center gap-2">
-                <a
-                    href="/add/bulk"
-                    class="text-xs bg-blue-50 border border-blue-200 text-blue-700 px-3 py-1.5 rounded-full font-bold hover:bg-blue-100 transition-colors"
-                >
-                    อัปหลายสลิป
-                </a>
-                <button
-                    type="button"
-                    on:click={handleNoSpend}
-                    class="text-xs bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1.5 rounded-full font-bold shadow-sm hover:shadow-md transition-all transform hover:scale-105 active:scale-95 flex items-center gap-1"
-                >
-                    ✨ วันนี้ไม่ได้ใช้เงินเลย!
-                </button>
-            </div>
-        {/if}
+        <div class="eyebrow">{type === "income" ? "Income Flow" : "Expense Flow"}</div>
     </div>
 
     <form on:submit|preventDefault={handleSubmit} class="space-y-4">
         <!-- Type Switcher -->
-        <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-lg">
+        <div class="grid grid-cols-2 gap-2 rounded-full bg-[#efe7d8] p-1">
             <button
                 type="button"
-                class="py-2 rounded-md font-medium transition-colors {type ===
+                class="rounded-full py-3 font-medium transition-colors {type ===
                 'income'
-                    ? 'bg-white text-emerald-600 shadow-sm'
-                    : 'text-slate-500'}"
+                    ? 'bg-white text-emerald-700 shadow-sm'
+                    : 'text-[#6f665c]'}"
                 on:click={() => (type = "income")}
             >
                 รายรับ
             </button>
             <button
                 type="button"
-                class="py-2 rounded-md font-medium transition-colors {type ===
+                class="rounded-full py-3 font-medium transition-colors {type ===
                 'expense'
-                    ? 'bg-white text-rose-600 shadow-sm'
-                    : 'text-slate-500'}"
+                    ? 'bg-white text-rose-700 shadow-sm'
+                    : 'text-[#6f665c]'}"
                 on:click={() => (type = "expense")}
             >
                 รายจ่าย
@@ -641,10 +657,10 @@
         </div>
 
         <!-- Amount -->
-        <div>
+        <div class="field-shell">
             <label
                 for="amount"
-                class="block text-sm font-medium text-slate-700 mb-1"
+                class="field-label"
                 >จำนวนเงิน</label
             >
             <input
@@ -654,13 +670,13 @@
                 required
                 min="0"
                 step="0.01"
-                class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-lg"
+                class="lux-input text-lg"
                 placeholder="0.00"
             />
         </div>
 
         {#if type === "income" && incomeAllocationPreview.length > 0}
-            <div class="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+            <div class="rounded-[24px] border border-emerald-100 bg-emerald-50 p-4">
                 <h3 class="font-bold text-emerald-800 mb-1">
                     Auto-Allocation 4 กระปุก
                 </h3>
@@ -669,7 +685,7 @@
                 </p>
                 <div class="grid grid-cols-2 gap-2">
                     {#each incomeAllocationPreview as jar}
-                        <div class="bg-white rounded-lg p-3 border border-emerald-100">
+                        <div class="rounded-[18px] border border-emerald-100 bg-white p-3">
                             <div class="text-[11px] text-slate-500">
                                 {jar.label} ({Math.round(jar.percent * 100)}%)
                             </div>
@@ -686,17 +702,17 @@
         {/if}
 
         <!-- Category -->
-        <div>
+        <div class="field-shell">
             <label
                 for="category"
-                class="block text-sm font-medium text-slate-700 mb-1"
+                class="field-label"
                 >หมวดหมู่</label
             >
             <select
                 id="category"
                 bind:value={category}
                 required
-                class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white"
+                class="lux-input"
             >
                 <option value="" disabled selected>เลือกหมวดหมู่</option>
                 {#each categories as cat}
@@ -709,7 +725,7 @@
                     type="text"
                     bind:value={customCategory}
                     required
-                    class="mt-2 w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                    class="lux-input mt-2"
                     placeholder="ระบุชื่อหมวดหมู่..."
                     aria-label="ระบุชื่อหมวดหมู่"
                 />
@@ -717,10 +733,10 @@
         </div>
 
         <!-- Date -->
-        <div>
+        <div class="field-shell">
             <label
                 for="date"
-                class="block text-sm font-medium text-slate-700 mb-1"
+                class="field-label"
                 >วันที่</label
             >
             <input
@@ -728,22 +744,22 @@
                 type="date"
                 bind:value={date}
                 required
-                class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                class="lux-input"
             />
         </div>
 
         <!-- Note -->
-        <div>
+        <div class="field-shell">
             <label
                 for="note"
-                class="block text-sm font-medium text-slate-700 mb-1"
+                class="field-label"
                 >บันทึกช่วยจำ (ถ้ามี)</label
             >
             <textarea
                 id="note"
                 bind:value={note}
                 rows="2"
-                class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                class="lux-input"
                 placeholder="รายละเอียดเพิ่มเติม..."
             ></textarea>
 
@@ -752,7 +768,7 @@
                     type="button"
                     on:click={categorizeFromNoteWithAI}
                     disabled={aiCategorizing || !note.trim()}
-                    class="text-xs font-medium px-3 py-1.5 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                    class="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     {#if aiCategorizing}
                         <Loader2 size={12} class="animate-spin" />
@@ -771,7 +787,7 @@
 
             {#if aiCategoryMessage}
                 <div
-                    class="mt-2 text-xs rounded-lg p-2 {aiCategorySource ===
+                    class="mt-2 rounded-[18px] p-3 text-xs {aiCategorySource ===
                     'fallback'
                         ? 'bg-amber-50 text-amber-700 border border-amber-100'
                         : 'bg-blue-50 text-blue-700 border border-blue-100'}"
@@ -785,10 +801,10 @@
         </div>
 
         <!-- Image Upload -->
-        <div>
+        <div class="field-shell">
             <label
                 for="file-upload-label"
-                class="block text-sm font-medium text-slate-700 mb-1"
+                class="field-label"
                 >รูปสลิป / ใบเสร็จ</label
             >
             <div class="relative">
@@ -802,7 +818,7 @@
                 <label
                     id="file-upload-label"
                     for="file-upload"
-                    class="flex flex-col items-center justify-center gap-2 w-full px-4 py-3 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:border-pink-500 hover:text-pink-500 transition-colors text-slate-500 overflow-hidden"
+                    class="flex w-full cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-[24px] border-2 border-dashed border-[#cdbfa8] px-4 py-5 text-[#6f665c] transition-colors hover:border-[#b4872f] hover:text-[#171411]"
                 >
                     {#if previewUrl}
                         <img
@@ -819,7 +835,7 @@
             </div>
 
             {#if ocrLoading}
-                <div class="mt-3 rounded-lg border border-blue-100 bg-blue-50 p-3">
+                <div class="mt-3 rounded-[20px] border border-blue-100 bg-blue-50 p-3">
                     <div class="flex items-center gap-2 text-blue-700 text-sm font-medium mb-2">
                         <Loader2 size={16} class="animate-spin" />
                         กำลังอ่านข้อมูลจากสลิป...
@@ -837,20 +853,20 @@
             {/if}
 
             {#if ocrError}
-                <div class="mt-3 rounded-lg border border-rose-100 bg-rose-50 p-3 text-sm text-rose-700">
+                <div class="mt-3 rounded-[20px] border border-rose-100 bg-rose-50 p-3 text-sm text-rose-700">
                     {ocrError}
                 </div>
             {/if}
 
             {#if ocrResult && !ocrLoading}
-                <div class="mt-3 rounded-lg border border-emerald-100 bg-emerald-50 p-3 space-y-2">
+                <div class="mt-3 rounded-[20px] border border-emerald-100 bg-emerald-50 p-3 space-y-2">
                     <div class="flex justify-between items-center">
                         <h4 class="text-sm font-bold text-emerald-800">
                             OCR อ่านสลิปสำเร็จ
                         </h4>
                         <button
                             type="button"
-                            class="text-xs text-emerald-700 font-medium hover:underline"
+                            class="text-xs font-medium text-emerald-700 hover:underline"
                             on:click={handleApplyOcr}
                         >
                             {ocrAutoFilled ? "Apply OCR อีกครั้ง" : "Apply OCR"}
@@ -898,7 +914,7 @@
         <button
             type="submit"
             disabled={loading}
-            class="w-full bg-pink-500 text-white font-bold py-3 rounded-xl hover:bg-pink-600 transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+            class="lux-button-primary w-full disabled:cursor-not-allowed disabled:opacity-50"
         >
             {#if loading}
                 <Loader2 class="animate-spin" size={20} />
@@ -908,4 +924,5 @@
             {/if}
         </button>
     </form>
+</div>
 </div>

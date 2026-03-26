@@ -392,29 +392,38 @@
 </script>
 
 <div class="space-y-6">
-    <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-        <PieChart class="text-pink-500" />
-        ภาพรวมเดือนนี้
-    </h2>
+    <section class="hero-panel p-6 md:p-8">
+        <div class="relative z-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+                <div class="eyebrow text-white/65">Performance Overview</div>
+                <h2 class="mt-2 text-4xl font-extrabold tracking-tight text-white">
+                    Analytics
+                </h2>
+                <p class="mt-2 max-w-xl text-sm text-white/72">
+                    สรุปรายจ่าย, กระปุก 4 ใบ และคำแนะนำเชิงพฤติกรรมสำหรับเดือนนี้
+                </p>
+            </div>
+            <div class="lux-pill">
+                <PieChart size={14} />
+                ภาพรวมเดือนนี้
+            </div>
+        </div>
+    </section>
 
     {#if loading}
-        <div class="text-center py-10 text-slate-400">กำลังโหลด...</div>
+        <div class="section-card py-10 text-center text-[#6f665c]">กำลังโหลด...</div>
     {:else}
-        <!-- Summary Cards -->
-        <div class="grid grid-cols-2 gap-4">
-            <div
-                class="bg-white p-4 rounded-xl shadow-sm border border-slate-100"
-            >
-                <div class="text-xs text-slate-500 mb-1">เงินออมสุทธิ</div>
-                <div class="text-xl font-bold text-emerald-600">
+        <div class="grid gap-4 md:grid-cols-3">
+            <div class="section-card p-5">
+                <div class="eyebrow mb-2">Net Saving</div>
+                <div class="text-3xl font-bold text-[#171411]">
                     ฿{(totalIncome - totalExpense).toLocaleString()}
                 </div>
+                <div class="mt-1 text-sm text-[#235d3b]">เงินออมสุทธิ</div>
             </div>
-            <div
-                class="bg-white p-4 rounded-xl shadow-sm border border-slate-100"
-            >
-                <div class="text-xs text-slate-500 mb-1">อัตราการออม</div>
-                <div class="text-xl font-bold text-blue-600">
+            <div class="section-card p-5">
+                <div class="eyebrow mb-2">Saving Rate</div>
+                <div class="text-3xl font-bold text-[#171411]">
                     {totalIncome > 0
                         ? (
                               ((totalIncome - totalExpense) / totalIncome) *
@@ -422,108 +431,116 @@
                           ).toFixed(1)
                         : 0}%
                 </div>
+                <div class="mt-1 text-sm text-[#6f665c]">สัดส่วนการออมของเดือนนี้</div>
+            </div>
+            <div class="section-card p-5">
+                <div class="eyebrow mb-2">Luxury Spend</div>
+                <div class="text-3xl font-bold text-[#171411]">
+                    ฿{totalLuxury.toLocaleString()}
+                </div>
+                <div class="mt-1 text-sm text-[#8c6a22]">ค่าใช้จ่ายฟุ่มเฟือย</div>
             </div>
         </div>
 
-        <!-- 4-Jar Progress -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
-            <h3 class="font-bold text-slate-700 flex items-center gap-2 mb-3">
-                <PiggyBank size={18} class="text-emerald-600" />
+        <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+            <section class="glass-panel p-5 md:p-6">
+                <h3 class="mb-4 flex items-center gap-2 text-2xl font-bold text-[#171411]">
+                    <PiggyBank size={20} class="text-[#235d3b]" />
                 แผน 4 กระปุก (รายรับเดือนนี้)
-            </h3>
-            <div class="space-y-3">
-                {#each jarBreakdown as jar}
-                    <div>
-                        <div class="flex justify-between text-xs mb-1">
-                            <span class="text-slate-600"
-                                >{jar.label} ({Math.round(jar.percent * 100)}%)
-                                - {jar.labelTh}</span
-                            >
-                            <span class="text-slate-700 font-medium">
+                </h3>
+                <div class="space-y-3">
+                    {#each jarBreakdown as jar}
+                        <div class="section-card p-4">
+                            <div class="mb-2 flex justify-between text-xs">
+                                <span class="text-[#6f665c]"
+                                    >{jar.label} ({Math.round(jar.percent * 100)}%)
+                                    - {jar.labelTh}</span
+                                >
+                                <span class="font-medium text-[#171411]">
                                 ฿{jar.actual.toLocaleString()} / ฿{jar.amount.toLocaleString()}
-                            </span>
-                        </div>
-                        <div class="h-2 bg-slate-100 rounded overflow-hidden">
-                            <div
-                                class="h-2 bg-emerald-500"
-                                style="width: {Math.min(100, Math.max(0, jar.progress))}%"
-                            ></div>
-                        </div>
-                    </div>
-                {/each}
-            </div>
-        </div>
-
-        <!-- Actionable Advice -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
-            <h3 class="font-bold text-slate-700 mb-3">คำแนะนำที่ทำได้ทันที</h3>
-            {#if jarActions.length === 0}
-                <div class="text-xs text-slate-500">ยังไม่มีคำแนะนำในเดือนนี้</div>
-            {:else}
-                <div class="space-y-2">
-                    {#each jarActions as action}
-                        <div
-                            class="rounded-lg border p-3 {action.positive
-                                ? 'border-emerald-100 bg-emerald-50'
-                                : 'border-amber-100 bg-amber-50'}"
-                        >
-                            <div
-                                class="font-semibold text-sm {action.positive
-                                    ? 'text-emerald-800'
-                                    : 'text-amber-800'}"
-                            >
-                                {action.title}
+                                </span>
                             </div>
-                            <div class="text-xs text-slate-600 mt-1">
-                                {action.summary}
+                            <div class="h-2 overflow-hidden rounded-full bg-[#efe7d8]">
+                                <div
+                                    class="h-2 rounded-full bg-[#235d3b]"
+                                    style="width: {Math.min(100, Math.max(0, jar.progress))}%"
+                                ></div>
                             </div>
-                            <a
-                                href={buildAddLink(action)}
-                                class="mt-2 inline-flex items-center gap-1 text-xs font-medium {action.positive
-                                    ? 'text-emerald-700'
-                                    : 'text-amber-700'} hover:underline"
-                            >
-                                {action.cta}
-                                <ArrowUpRight size={12} />
-                            </a>
                         </div>
                     {/each}
                 </div>
-            {/if}
+            </section>
+
+            <section class="section-card p-5 md:p-6">
+                <h3 class="mb-4 text-2xl font-bold text-[#171411]">คำแนะนำที่ทำได้ทันที</h3>
+                {#if jarActions.length === 0}
+                    <div class="text-sm text-[#6f665c]">ยังไม่มีคำแนะนำในเดือนนี้</div>
+                {:else}
+                    <div class="space-y-3">
+                        {#each jarActions as action}
+                            <div
+                                class="rounded-[20px] border p-4 {action.positive
+                                    ? 'border-emerald-100 bg-emerald-50'
+                                    : 'border-amber-100 bg-[#fbf4e2]'}"
+                            >
+                                <div
+                                    class="text-sm font-semibold {action.positive
+                                        ? 'text-emerald-800'
+                                        : 'text-[#8c6a22]'}"
+                                >
+                                    {action.title}
+                                </div>
+                                <div class="mt-1 text-xs text-[#6f665c]">
+                                    {action.summary}
+                                </div>
+                                <a
+                                    href={buildAddLink(action)}
+                                    class="mt-3 inline-flex items-center gap-1 text-xs font-medium {action.positive
+                                        ? 'text-emerald-700'
+                                        : 'text-[#8c6a22]'} hover:underline"
+                                >
+                                    {action.cta}
+                                    <ArrowUpRight size={12} />
+                                </a>
+                            </div>
+                        {/each}
+                    </div>
+                {/if}
+            </section>
         </div>
 
-        <!-- AI Coach -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+        <div class="grid gap-6 lg:grid-cols-[1fr_1fr]">
+        <div class="glass-panel p-5 md:p-6">
             <div class="flex items-center justify-between gap-2 mb-3">
-                <h3 class="font-bold text-slate-700">AI โค้ชนิสัยการเงิน</h3>
+                <h3 class="text-2xl font-bold text-[#171411]">AI โค้ชนิสัยการเงิน</h3>
                 <button
                     type="button"
                     on:click={loadCoachAdvice}
                     disabled={coachLoading ||
                         (totalIncome === 0 && totalExpense === 0 && categoryBreakdown.length === 0)}
-                    class="text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="lux-button-secondary px-4 py-2 text-xs disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     {coachLoading ? "กำลังวิเคราะห์..." : "วิเคราะห์ใหม่"}
                 </button>
             </div>
 
             {#if coachLoading}
-                <div class="text-xs text-slate-500">
+                <div class="text-sm text-[#6f665c]">
                     AI กำลังวิเคราะห์พฤติกรรมการเงิน...
                 </div>
             {:else if coachError}
-                <div class="text-xs text-rose-600">{coachError}</div>
+                <div class="rounded-[18px] border border-rose-100 bg-rose-50 p-3 text-sm text-rose-600">{coachError}</div>
             {:else if coachSummary}
-                <p class="text-sm text-slate-700 bg-slate-50 rounded-lg border border-slate-100 p-3">
+                <p class="rounded-[20px] border border-[#00000010] bg-white/70 p-4 text-sm text-[#171411]">
                     {coachSummary}
                 </p>
 
                 {#if coachRecommendations.length > 0}
                     <div class="space-y-2 mt-3">
                         {#each coachRecommendations as recommendation}
-                            <div class="rounded-lg border border-slate-200 p-3">
+                            <div class="rounded-[20px] border border-[#00000010] bg-white/65 p-4">
                                 <div class="flex items-center justify-between gap-2">
-                                    <div class="font-semibold text-sm text-slate-800">
+                                    <div class="font-semibold text-sm text-[#171411]">
                                         {recommendation.title}
                                     </div>
                                     <span
@@ -532,12 +549,12 @@
                                         {priorityLabel(recommendation.priority)}
                                     </span>
                                 </div>
-                                <div class="text-xs text-slate-600 mt-1">
+                                <div class="mt-1 text-xs text-[#6f665c]">
                                     {recommendation.action}
                                 </div>
                                 <a
                                     href={buildCoachAddLink(recommendation)}
-                                    class="mt-2 inline-flex items-center gap-1 text-xs font-medium text-slate-700 hover:underline"
+                                    class="mt-2 inline-flex items-center gap-1 text-xs font-medium text-[#171411] hover:underline"
                                 >
                                     ไปเพิ่มรายการตามคำแนะนำ
                                     <ArrowUpRight size={12} />
@@ -548,7 +565,7 @@
                 {/if}
 
                 {#if coachSource || coachConfidence !== null}
-                    <div class="mt-3 text-[11px] text-slate-400">
+                    <div class="mt-3 text-[11px] text-[#8f8578]">
                         แหล่งวิเคราะห์: {coachSource === "minimax"
                             ? "MiniMax"
                             : coachSource === "fallback"
@@ -560,34 +577,32 @@
                     </div>
                 {/if}
             {:else}
-                <div class="text-xs text-slate-500">
+                <div class="text-sm text-[#6f665c]">
                     ยังไม่มีข้อมูลเพียงพอสำหรับวิเคราะห์
                 </div>
             {/if}
         </div>
 
-        <!-- Luxury Insight -->
-        <div class="bg-purple-50 p-4 rounded-xl border border-purple-100">
-            <h3 class="font-bold text-purple-800 mb-1">ค่าใช้จ่ายฟุ่มเฟือย</h3>
-            <div class="text-2xl font-bold text-purple-600 mb-2">
+        <div class="section-card p-5 md:p-6">
+            <div class="eyebrow mb-2">Spending Signal</div>
+            <h3 class="mb-3 text-2xl font-bold text-[#171411]">ค่าใช้จ่ายฟุ่มเฟือย</h3>
+            <div class="mb-3 text-3xl font-bold text-[#171411]">
                 ฿{totalLuxury.toLocaleString()}
             </div>
-            <p class="text-sm text-purple-700 bg-white/50 p-2 rounded-lg">
-                💡 {insight}
+            <p class="rounded-[20px] bg-[#fbf4e2] p-4 text-sm text-[#7b6127]">
+                {insight}
             </p>
         </div>
+        </div>
 
-        <!-- Breakdown Table -->
-        <div
-            class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden"
-        >
+        <div class="section-card overflow-hidden">
             <div
-                class="px-4 py-3 border-b border-slate-100 font-bold text-slate-700"
+                class="border-b border-[#00000010] px-4 py-4 font-bold text-[#171411]"
             >
                 แบ่งตามหมวดหมู่
             </div>
             <table class="w-full text-sm">
-                <thead class="bg-slate-50 text-slate-500">
+                <thead class="bg-[#f7f3ec] text-[#6f665c]">
                     <tr>
                         <th class="px-4 py-2 text-left font-medium">หมวดหมู่</th
                         >
@@ -595,17 +610,17 @@
                         <th class="px-4 py-2 text-right font-medium">ยอดรวม</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-[#00000008]">
                     {#each categoryBreakdown as item}
                         <tr>
-                            <td class="px-4 py-3 text-slate-700"
+                            <td class="px-4 py-3 text-[#171411]"
                                 >{item.category}</td
                             >
-                            <td class="px-4 py-3 text-right text-slate-500"
+                            <td class="px-4 py-3 text-right text-[#6f665c]"
                                 >{item.count}</td
                             >
                             <td
-                                class="px-4 py-3 text-right font-medium text-slate-700"
+                                class="px-4 py-3 text-right font-medium text-[#171411]"
                                 >฿{item.amount.toLocaleString()}</td
                             >
                         </tr>

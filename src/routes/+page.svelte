@@ -211,160 +211,177 @@
 </script>
 
 <div class="space-y-6">
-    <!-- Welcome Message -->
-    <div class="flex items-center gap-2 text-slate-500 text-sm">
-        <span>สวัสดี</span>
-        <span class="font-bold {users[$currentUser].color}"
-            >{users[$currentUser].name}</span
-        >
-        <span>มาเช็คสุขภาพการเงินกันเถอะ!</span>
-    </div>
-
-    <!-- Expense Card -->
-    <div
-        class="bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl p-6 text-white shadow-lg text-center relative overflow-hidden"
-    >
-        <div
-            class="absolute top-0 left-0 w-full h-full bg-white opacity-10 transform -skew-x-12"
-        ></div>
-        <h2 class="text-lg font-medium opacity-90 relative z-10">
-            รายจ่าย
-        </h2>
-        <div class="text-5xl font-bold mt-2 relative z-10">
-            ฿{totalExpense.toLocaleString()}
-        </div>
-        <p class="mt-2 text-sm opacity-90 relative z-10">{expenseSummary}</p>
-    </div>
-
-    <!-- Summary Cards -->
-    <div class="grid grid-cols-2 gap-4">
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
-            <div class="flex items-center gap-2 text-emerald-500 mb-2">
-                <TrendingUp size={20} />
-                <span class="font-medium">รายรับ</span>
+    <section class="hero-panel p-6 md:p-8">
+        <div class="relative z-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div class="space-y-3">
+                <div class="eyebrow text-white/65">Monthly Liquidity</div>
+                <div class="flex items-center gap-2 text-sm text-white/75">
+                    <span>สวัสดี</span>
+                    <span class="font-semibold text-[#f1d892]">{users[$currentUser].name}</span>
+                    <span>มาดูภาพรวมการเงินเดือนนี้กัน</span>
+                </div>
+                <h2 class="title-display">฿{totalExpense.toLocaleString()}</h2>
+                <p class="max-w-md text-sm text-white/72">{expenseSummary}</p>
             </div>
-            <div class="text-xl font-bold text-slate-800">
-                ฿{totalIncome.toLocaleString()}
+
+            <div class="flex flex-wrap gap-3">
+                <div class="lux-pill">
+                    <TrendingUp size={14} />
+                    รายรับ ฿{totalIncome.toLocaleString()}
+                </div>
+                <div class="lux-pill">
+                    <TrendingDown size={14} />
+                    รายจ่าย ฿{totalExpense.toLocaleString()}
+                </div>
             </div>
         </div>
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
-            <div class="flex items-center gap-2 text-rose-500 mb-2">
-                <TrendingDown size={20} />
-                <span class="font-medium">รายจ่าย</span>
-            </div>
-            <div class="text-xl font-bold text-slate-800">
-                ฿{totalExpense.toLocaleString()}
+    </section>
+
+    <section class="grid gap-4 md:grid-cols-3">
+        <div class="section-card p-5">
+            <div class="eyebrow mb-3">Inflow</div>
+            <div class="flex items-center gap-3 text-[#235d3b]">
+                <TrendingUp size={22} />
+                <div>
+                    <div class="text-2xl font-bold text-[#171411]">
+                        ฿{totalIncome.toLocaleString()}
+                    </div>
+                    <div class="text-sm text-[#6f665c]">รายรับเดือนนี้</div>
+                </div>
             </div>
         </div>
-    </div>
+        <div class="section-card p-5">
+            <div class="eyebrow mb-3">Outflow</div>
+            <div class="flex items-center gap-3 text-[#9b2c2c]">
+                <TrendingDown size={22} />
+                <div>
+                    <div class="text-2xl font-bold text-[#171411]">
+                        ฿{totalExpense.toLocaleString()}
+                    </div>
+                    <div class="text-sm text-[#6f665c]">ค่าใช้จ่ายเดือนนี้</div>
+                </div>
+            </div>
+        </div>
+        <div class="section-card p-5">
+            <div class="eyebrow mb-3">Net Position</div>
+            <div class="flex items-center gap-3 text-[#d8af52]">
+                <Wallet size={22} />
+                <div>
+                    <div class="text-2xl font-bold text-[#171411]">
+                        ฿{(totalIncome - totalExpense).toLocaleString()}
+                    </div>
+                    <div class="text-sm text-[#6f665c]">กระแสเงินสุทธิ</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- 4-Jar Allocation -->
-    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100">
-        <h3 class="font-bold text-slate-700 mb-1">แผน 4 กระปุกอัตโนมัติ</h3>
-        <p class="text-xs text-slate-500 mb-4">
-            ระบบคำนวณจากรายรับเดือนนี้ตามสูตร 40/20/20/20
-        </p>
+    <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+        <section class="glass-panel p-5 md:p-6">
+            <div class="mb-5 flex items-start justify-between gap-4">
+                <div>
+                    <div class="eyebrow mb-2">Automated Allocation</div>
+                    <h3 class="text-2xl font-bold text-[#171411]">แผน 4 กระปุก</h3>
+                    <p class="mt-1 text-sm text-[#6f665c]">
+                        คำนวณจากรายรับเดือนนี้ตามสูตร 40/20/20/20
+                    </p>
+                </div>
+                <div class="rounded-full bg-[#f5efdf] px-3 py-1 text-xs font-semibold text-[#8c6a22]">
+                    Dynamic
+                </div>
+            </div>
 
-        <div class="space-y-3">
-            {#each jarProgress as jar}
-                <div
-                    class="rounded-xl border p-3 {jarStyles[jar.key].bg} {jarStyles[jar.key]
-                    .border}"
-                >
-                    <div class="flex justify-between items-start mb-2">
-                        <div>
-                            <div class="text-xs text-slate-500">
-                                {jar.label} ({Math.round(jar.percent * 100)}%)
+            <div class="space-y-3">
+                {#each jarProgress as jar}
+                    <div class="section-card p-4">
+                        <div class="mb-3 flex items-start justify-between gap-3">
+                            <div>
+                                <div class="text-sm font-semibold text-[#171411]">
+                                    {jar.labelTh}
+                                </div>
+                                <div class="text-xs text-[#6f665c]">
+                                    {jar.label} • {Math.round(jar.percent * 100)}%
+                                </div>
                             </div>
+                            <div class="text-right">
+                                <div class="text-xs text-[#6f665c]">Allocated</div>
+                                <div class="font-bold text-[#171411]">
+                                    ฿{jar.amount.toLocaleString()}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 h-2.5 overflow-hidden rounded-full bg-[#f2ede4]">
                             <div
-                                class="text-sm font-semibold {jarStyles[jar.key].text}"
+                                style="width: {Math.min(100, Math.max(0, jar.progress))}%"
+                                class="h-2.5 rounded-full {jarStyles[jar.key].bar}"
+                            ></div>
+                        </div>
+
+                        <div class="flex justify-between text-xs">
+                            <span class="text-[#6f665c]">
+                                ใช้งานจริง ฿{jar.actual.toLocaleString()}
+                            </span>
+                            <span
+                                class={jar.delta >= 0
+                                    ? "font-semibold text-[#235d3b]"
+                                    : "font-semibold text-[#9b2c2c]"}
                             >
-                                {jar.labelTh}
-                            </div>
-                        </div>
-                        <div class="text-right text-xs">
-                            <div class="text-slate-500">Allocated</div>
-                            <div class="font-bold text-slate-800">
-                                ฿{jar.amount.toLocaleString()}
-                            </div>
+                                {jar.delta >= 0 ? "เหลือ" : "เกิน"} ฿{Math.abs(
+                                    jar.delta,
+                                ).toLocaleString()}
+                            </span>
                         </div>
                     </div>
+                {/each}
+            </div>
+        </section>
 
-                    <div class="overflow-hidden h-2 rounded bg-white/70 mb-2">
-                        <div
-                            style="width: {Math.min(100, Math.max(0, jar.progress))}%"
-                            class="h-2 rounded {jarStyles[jar.key].bar}"
-                        ></div>
+        <section class="section-card p-5 md:p-6">
+            <div class="mb-5">
+                <div class="eyebrow mb-2">Expense Distribution</div>
+                <h3 class="text-2xl font-bold text-[#171411]">ค่าใช้จ่ายเดือนนี้</h3>
+            </div>
+
+            {#if expenseByCategory.length > 0}
+                <div class="flex flex-col items-center">
+                    <div class="relative mb-6 h-52 w-52">
+                        <svg viewBox="0 0 100 100" class="h-full w-full -rotate-90">
+                            {#each pieSegments as seg}
+                                <path d={seg.d} fill={seg.color} class="transition-all duration-300 hover:opacity-80" />
+                            {/each}
+                            <circle cx="50" cy="50" r="25" fill="white" />
+                        </svg>
+                        <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
+                            <span class="text-2xl font-bold text-[#171411]">
+                                ฿{totalExpense.toLocaleString()}
+                            </span>
+                            <span class="eyebrow">Spent</span>
+                        </div>
                     </div>
 
-                    <div class="flex justify-between text-xs">
-                        <span class="text-slate-600"
-                            >ใช้งานจริง: ฿{jar.actual.toLocaleString()}</span
-                        >
-                        <span
-                            class={jar.delta >= 0
-                                ? "text-emerald-700 font-medium"
-                                : "text-rose-700 font-medium"}
-                        >
-                            {jar.delta >= 0 ? "เหลือ" : "เกิน"} ฿{Math.abs(
-                                jar.delta,
-                            ).toLocaleString()}
-                        </span>
-                    </div>
-                </div>
-            {/each}
-        </div>
-    </div>
-
-    <!-- Expense Breakdown -->
-    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="font-bold text-slate-700 flex items-center gap-2">
-                <Wallet size={20} class="text-blue-500" />
-                ค่าใช้จ่ายเดือนนี้
-            </h3>
-        </div>
-
-        {#if expenseByCategory.length > 0}
-            <div class="flex flex-col items-center">
-                <!-- SVG Pie Chart -->
-                <div class="relative w-48 h-48 mb-6">
-                    <svg viewBox="0 0 100 100" class="w-full h-full -rotate-90">
-                        {#each pieSegments as seg}
-                            <path d={seg.d} fill={seg.color} class="transition-all duration-300 hover:opacity-80" />
+                    <div class="w-full space-y-2">
+                        {#each expenseByCategory as cat}
+                            <div class="flex items-center justify-between rounded-[18px] bg-[#f7f3ec] px-3 py-3 text-sm">
+                                <div class="flex min-w-0 items-center gap-3">
+                                    <div class="h-3 w-3 shrink-0 rounded-full" style="background-color: {cat.color}"></div>
+                                    <span class="truncate text-[#171411]">
+                                        {cat.category.split('(')[0].trim()}
+                                    </span>
+                                </div>
+                                <span class="font-semibold text-[#6f665c]">
+                                    {cat.percent.toFixed(1)}%
+                                </span>
+                            </div>
                         {/each}
-                        <circle cx="50" cy="50" r="25" fill="white" />
-                    </svg>
-                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                        <span class="text-lg font-bold text-slate-800">฿{totalExpense.toLocaleString()}</span>
-                        <span class="text-[10px] text-slate-400 uppercase font-medium">รายจ่าย</span>
                     </div>
                 </div>
-
-                <!-- Legend -->
-                <div class="w-full grid grid-cols-2 gap-x-4 gap-y-2">
-                    {#each expenseByCategory as cat}
-                        <div class="flex items-center justify-between text-xs py-1 border-b border-slate-50 last:border-0">
-                            <div class="flex items-center gap-2 truncate">
-                                <div class="w-2 h-2 rounded-full shrink-0" style="background-color: {cat.color}"></div>
-                                <span class="text-slate-600 truncate">{cat.category.split('(')[0].trim()}</span>
-                            </div>
-                            <span class="font-bold text-slate-800 ml-1">{cat.percent.toFixed(1)}%</span>
-                        </div>
-                    {/each}
+            {:else}
+                <div class="rounded-[24px] bg-[#f7f3ec] px-5 py-10 text-center">
+                    <TrendingDown size={38} class="mx-auto mb-3 text-[#c9bca7]" />
+                    <p class="text-sm text-[#6f665c]">ยังไม่มีค่าใช้จ่ายในเดือนนี้</p>
                 </div>
-
-                <div class="w-full mt-4 flex justify-between text-xs pt-3 border-t border-slate-100">
-                    <span class="text-slate-500">ใช้ไป: ฿{totalExpense.toLocaleString()}</span>
-                </div>
-            </div>
-        {:else}
-            <div class="text-center py-8">
-                <div class="text-slate-300 mb-2">
-                    <TrendingDown size={40} class="mx-auto opacity-20" />
-                </div>
-                <p class="text-slate-500 text-sm">ยังไม่มีค่าใช้จ่ายในเดือนนี้</p>
-            </div>
-        {/if}
+            {/if}
+        </section>
     </div>
 </div>
