@@ -2,25 +2,83 @@
   import "../app.css";
   import { Home, PlusCircle, List, PieChart, Trophy } from "lucide-svelte";
   import { currentUser, users } from "$lib/userStore";
-  import { page } from "$app/stores";
+  import { navigating, page } from "$app/stores";
+
+  type NavItem = {
+    href: string;
+    label: string;
+    icon: typeof Home;
+    eyebrow: string;
+    title: string;
+    primary?: boolean;
+  };
 
   function toggleUser() {
     currentUser.update((value) => (value === "bear" ? "rabbit" : "bear"));
   }
 
-  const navItems = [
-    { href: "/", label: "Atelier", icon: Home },
-    { href: "/transactions", label: "Ledger", icon: List },
-    { href: "/add", label: "New", icon: PlusCircle, primary: true },
-    { href: "/analytics", label: "Insights", icon: PieChart },
-    { href: "/game", label: "Duel", icon: Trophy },
+  const navItems: NavItem[] = [
+    {
+      href: "/",
+      label: "Atelier",
+      icon: Home,
+      eyebrow: "Saving Challenge",
+      title: "Sovereign Savings",
+    },
+    {
+      href: "/transactions",
+      label: "Ledger",
+      icon: List,
+      eyebrow: "Transaction Archive",
+      title: "Ledger Flow",
+    },
+    {
+      href: "/add",
+      label: "New",
+      icon: PlusCircle,
+      eyebrow: "Quick Capture",
+      title: "Create Entry",
+      primary: true,
+    },
+    {
+      href: "/analytics",
+      label: "Insights",
+      icon: PieChart,
+      eyebrow: "Money Signals",
+      title: "Insight Studio",
+    },
+    {
+      href: "/game",
+      label: "Duel",
+      icon: Trophy,
+      eyebrow: "Friendly Competition",
+      title: "Savings Duel",
+    },
   ];
 
-  function isActive(href: string) {
-    const pathname = $page.url.pathname;
+  function matchesPath(href: string, pathname: string) {
     if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(`${href}/`);
   }
+
+  function isActive(href: string) {
+    return matchesPath(href, $page.url.pathname);
+  }
+
+  function isVisualActive(href: string) {
+    const pendingPath = $navigating?.to?.url.pathname;
+    return matchesPath(href, pendingPath || $page.url.pathname);
+  }
+
+  function navState(href: string) {
+    const pendingPath = $navigating?.to?.url.pathname;
+    if (pendingPath && matchesPath(href, pendingPath)) return "pending";
+    if (isActive(href)) return "active";
+    return "idle";
+  }
+
+  $: activeNavItem =
+    navItems.find((item) => isVisualActive(item.href)) || navItems[0];
 </script>
 
 <div class="app-shell">
@@ -31,8 +89,8 @@
           <span class="text-lg font-black">S</span>
         </div>
         <div class="min-w-0">
-          <div class="eyebrow">Saving Challenge</div>
-          <h1 class="truncate text-lg font-bold text-[#171411]">Sovereign Savings</h1>
+          <div class="eyebrow">{activeNavItem.eyebrow}</div>
+          <h1 class="truncate text-lg font-bold text-[#171411]">{activeNavItem.title}</h1>
         </div>
       </div>
 
@@ -67,11 +125,17 @@
     {#each navItems as item}
       <a
         href={item.href}
-        class="bottom-nav-link {item.primary ? 'primary-link' : ''} {isActive(item.href)
+        class="bottom-nav-link {item.primary ? 'primary-link' : ''} {isVisualActive(item.href)
           ? 'active'
           : ''}"
+        data-state={navState(item.href)}
+        aria-current={isActive(item.href) ? "page" : undefined}
+        aria-label={item.label}
+        data-sveltekit-preload-data="tap"
       >
+        <span class="bottom-nav-icon-shell" aria-hidden="true">
         <svelte:component this={item.icon} size={item.primary ? 24 : 20} />
+        </span>
         {#if !item.primary}
           <span>{item.label}</span>
         {/if}

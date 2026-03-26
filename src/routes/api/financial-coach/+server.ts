@@ -62,6 +62,25 @@ function toNumber(value: unknown, fallback = 0): number {
     return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+function getMiniMaxApiKey(): string | null {
+    const value = env.MINIMAX_API_KEY?.trim();
+    if (!value) return null;
+
+    const normalized = value.toLowerCase();
+    if (
+        normalized === "false" ||
+        normalized === "off" ||
+        normalized === "disabled" ||
+        normalized === "none" ||
+        normalized === "null" ||
+        normalized === "undefined"
+    ) {
+        return null;
+    }
+
+    return value;
+}
+
 function normalizeConfidence(input: unknown): number {
     const parsed = toNumber(input, 0.5);
     if (parsed > 1) return Math.max(0, Math.min(1, parsed / 100));
@@ -373,9 +392,9 @@ function fallbackCoach(payload: CoachRequest): CoachResult {
 }
 
 async function coachWithMiniMax(payload: CoachRequest): Promise<CoachResult> {
-    const apiKey = env.MINIMAX_API_KEY?.trim();
+    const apiKey = getMiniMaxApiKey();
     if (!apiKey) {
-        throw new Error("MINIMAX_API_KEY is missing");
+        throw new Error("MINIMAX_API_KEY is missing or disabled");
     }
 
     const baseUrl = (env.MINIMAX_BASE_URL?.trim() || "https://api.minimax.io/v1").replace(
@@ -497,6 +516,9 @@ function isExpectedMiniMaxFallbackError(error: unknown): boolean {
     if (message.includes("aborterror")) return true;
     if (message.includes("operation was aborted")) return true;
     if (message.includes("request timed out")) return true;
+    if (message.includes("minimax_api_key is missing or disabled")) return true;
+    if (message.includes("http 401")) return true;
+    if (message.includes("authorized_error")) return true;
     if (message.includes("non-json content")) return true;
     if (message.includes("incomplete recommendation payload")) return true;
     return false;
