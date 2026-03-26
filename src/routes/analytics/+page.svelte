@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { browser } from "$app/environment";
     import { supabase } from "$lib/supabaseClient";
     import { PieChart, PiggyBank, ArrowUpRight } from "lucide-svelte";
     import { currentUser } from "$lib/userStore";
@@ -259,7 +260,7 @@
     const currentMonth = today.getMonth() + 1;
     const currentYear = today.getFullYear();
 
-    $: if ($currentUser) {
+    $: if (browser && $currentUser) {
         loadData();
     }
 
